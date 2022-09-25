@@ -1,24 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import MainPage from "./Views/MainPage";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import styled from "styled-components";
+
+const Container = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: "red";
+`;
+
+const theme = createTheme({
+  spacing: 1,
+
+  palette: {
+    // 배경 :  옅은 회색
+    basis: {
+      main: "#F8F8FA",
+      contrastText: "#000000", /// 겅은색
+      dark: "rgba(56, 85, 179, 0.04)", // 짙은 회색
+    },
+
+    // 컴포넌트 : 흰색
+    component: {
+      main: "#FFFFFF",
+      contrastText: "#000000",
+    },
+  },
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <ThemeProvider theme={theme}>
+        <MainPage />
+      </ThemeProvider>
+    </Container>
   );
 }
 
