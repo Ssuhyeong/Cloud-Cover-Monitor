@@ -1,6 +1,7 @@
 import MainPage from "./Views/MainPage";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import styled from "styled-components";
+import SignIn from "./Views/SignIn";
 
 const Container = styled.div`
   position: absolute;
@@ -34,7 +35,7 @@ function App() {
   return (
     <Container>
       <ThemeProvider theme={theme}>
-        <MainPage />
+        <SignIn />
       </ThemeProvider>
     </Container>
   );

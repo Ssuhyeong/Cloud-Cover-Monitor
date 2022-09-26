@@ -1,5 +1,7 @@
 import * as React from "react";
-import { useRef, useState, useNavigate } from "react";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   FormHelperText,
@@ -21,18 +23,19 @@ const SignIn = () => {
   const [emailError, setEmailError] = useState("");
   const [loginError, setloginError] = useState(false);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const onhandlePost = async (email) => {
-    await axios
-      .post("/account/signIn", { email: email })
-      .then((res) => {
-        localStorage.setItem("Authorization", res.headers.authorization);
-        navigate("/memu");
-      })
-      .catch(() => {
-        setloginError(true);
-      });
+    // await axios
+    //   .post("/account/signIn", { email: email })
+    //   .then((res) => {
+    //     localStorage.setItem("Authorization", res.headers.authorization);
+    //     navigate("/memu");
+    //   })
+    //   .catch(() => {
+    //     setloginError(true);
+    //   });
+    console.log(email);
   };
 
   const handleSubmit = () => {
@@ -104,7 +107,6 @@ const SignIn = () => {
             </FormHelperText>
             <Button
               fullWidth
-              // type="submit"
               variant="contained"
               sx={{ mt: 3, mb: 2, height: 50, background: "#3855B3" }}
               onClick={handleSubmit}
