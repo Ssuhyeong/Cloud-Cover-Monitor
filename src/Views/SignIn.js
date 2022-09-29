@@ -13,7 +13,7 @@ import {
   Snackbar,
 } from "@mui/material";
 
-import axios from "axios";
+import axios from "../utils/axios";
 
 const theme = createTheme();
 
