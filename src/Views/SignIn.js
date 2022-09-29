@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -22,25 +21,29 @@ const SignIn = () => {
   const textRef = useRef([]);
   const [emailError, setEmailError] = useState("");
   const [loginError, setloginError] = useState(false);
-
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const onhandlePost = async (email) => {
-    // await axios
-    //   .post("/account/signIn", { email: email })
-    //   .then((res) => {
-    //     localStorage.setItem("Authorization", res.headers.authorization);
-    //     navigate("/memu");
-    //   })
-    //   .catch(() => {
-    //     setloginError(true);
-    //   });
-    console.log(email);
+    await axios
+      .post("/user_inform/onLogin", null, { params: { email: email } })
+      .then((res) => {
+        // navigate("/menu/side1");
+        console.log(res.data);
+        if (res.data === "success") {
+          navigate("/menu/side1");
+        } else {
+          setloginError(true);
+        }
+      })
+      .catch(() => {
+        setloginError(true);
+      });
+    // navigate("/menu/side1");
   };
 
   const handleSubmit = () => {
     const email = textRef.current.value;
-    console.log(email);
+
     const emailRegex =
       /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     if (!emailRegex.test(email))
@@ -83,10 +86,12 @@ const SignIn = () => {
           }}
         >
           <Box
-            component="form"
-            // onSubmit={handleSubmit}
-            noValidate
             sx={{ mt: 1, width: 500 }}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                handleSubmit();
+              }
+            }}
           >
             <h1>Login</h1>
             <TextField

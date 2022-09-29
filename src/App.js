@@ -1,21 +1,16 @@
-import MainPage from "./Views/MainPage";
+import { BrowserRouter as Router } from "react-router-dom";
+import RenderRoutes from "./routes";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import styled from "styled-components";
-import SignIn from "./Views/SignIn";
-
-const Container = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  color: "red";
-`;
 
 const theme = createTheme({
   spacing: 1,
 
   palette: {
+    primary: {
+      main: "#3855B3",
+      contrastText: "#fff",
+    },
+
     // 배경 :  옅은 회색
     basis: {
       main: "#F8F8FA",
@@ -28,17 +23,22 @@ const theme = createTheme({
       main: "#FFFFFF",
       contrastText: "#000000",
     },
+
+    // 로그아웃 버튼
+    logout: {
+      main: "#000000",
+      contrastText: "#000000",
+    },
   },
 });
-
-function App() {
+const App = () => {
   return (
-    <Container>
-      <ThemeProvider theme={theme}>
-        <SignIn />
-      </ThemeProvider>
-    </Container>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <RenderRoutes />
+      </Router>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
