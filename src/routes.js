@@ -2,6 +2,8 @@ import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 
 import DashboardLayout from "./layouts/DashboardLayout";
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
 
 const routes = [
   // {
@@ -11,27 +13,30 @@ const routes = [
   // },
   {
     path: "/",
-    // guard: LoginGuard,
-    // layout: DashboardLayout,
+    guard: PublicRoute,
     element: React.lazy(() => import("./Views/SignIn.js")),
   },
   {
     path: "/menu/side1",
+    guard: PrivateRoute,
     layout: DashboardLayout,
     element: React.lazy(() => import("./Views/MainPage.js")),
   },
   {
     path: "/menu/side2",
+    guard: PrivateRoute,
     layout: DashboardLayout,
     element: React.lazy(() => import("./Views/Side1Page.js")),
   },
   {
     path: "/menu/side3",
+    guard: PrivateRoute,
     layout: DashboardLayout,
     element: React.lazy(() => import("./Views/Side2Page.js")),
   },
   {
     path: "/menu/side4",
+    guard: PrivateRoute,
     layout: DashboardLayout,
     element: React.lazy(() => import("./Views/Side3Page.js")),
   },

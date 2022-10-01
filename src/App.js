@@ -1,6 +1,7 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import RenderRoutes from "./routes";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 
 const theme = createTheme({
   spacing: 1,
@@ -32,6 +33,9 @@ const theme = createTheme({
   },
 });
 const App = () => {
+  const token = useSelector((state) => state.Auth.token);
+  console.log(token);
+
   return (
     <ThemeProvider theme={theme}>
       <Router>

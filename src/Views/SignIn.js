@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+// import { Jwt } from "jsonwebtoken";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
@@ -14,6 +15,8 @@ import {
 } from "@mui/material";
 
 import axios from "../utils/axios";
+import { useDispatch } from "react-redux";
+import { setToken } from "../redux/reducers/AuthReducer";
 
 const theme = createTheme();
 
@@ -22,18 +25,14 @@ const SignIn = () => {
   const [emailError, setEmailError] = useState("");
   const [loginError, setloginError] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onhandlePost = async (email) => {
     await axios
       .post("/user_inform/onLogin", null, { params: { email: email } })
       .then((res) => {
-        // navigate("/menu/side1");
-        console.log(res.data);
-        if (res.data === "success") {
-          navigate("/menu/side1");
-        } else {
-          setloginError(true);
-        }
+        dispatch(setToken(res.data));
+        navigate("/menu/side1");
       })
       .catch(() => {
         setloginError(true);
