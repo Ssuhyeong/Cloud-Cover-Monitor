@@ -27,6 +27,7 @@
 const express = require("express");
 const app = express();
 const user_inform = require("./routes/user_inform");
+const wrk_inform = require("./routes/wrk_inform.js")
 const cors = require("cors");
 
 var corsOptions = {
@@ -41,6 +42,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 app.use("/user_inform", user_inform);
+app.use("/wrk_inform", wrk_inform);
 
 const port = 3001;
 app.listen(port, () =>

@@ -17,6 +17,8 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../../redux/reducers/AuthReducer";
 
 const items = [
   {
@@ -42,10 +44,11 @@ const items = [
 ];
 
 const NavBar = (props) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const locationHook = useLocation();
   const splitUrl = locationHook?.pathname?.split("/") ?? null;
   const location = splitUrl?.length > 1 ? splitUrl[splitUrl.length - 1] : null;
-  const navigate = useNavigate();
 
   const handleListItemClick = (value) => {
     navigate(`/menu/${value}`);
@@ -54,6 +57,12 @@ const NavBar = (props) => {
   // const handleLogoClick = () => {
   //   navigate("/menu/side1");
   // };
+
+  const handlelogout = async () => {
+    alert("로그아웃 되었습니다.");
+    navigate("/");
+    await dispatch(setToken(""));
+  };
 
   return (
     <Box>
@@ -127,6 +136,26 @@ const NavBar = (props) => {
             );
           })}
         </List>
+        <Box sx={{ pl: 20, py: 22, pr: 18.88, mt: 300 }}>
+          <Typography
+            sx={{
+              display: "flex",
+              width: "100%",
+              fontSize: "20px",
+              fontWeight: 600,
+              alignItems: "center",
+              "&:hover": {
+                borderRadius: "4px",
+                backgroundColor: "#FFE9E9",
+              },
+            }}
+            onClick={handlelogout}
+            style={{ cursor: "pointer" }}
+          >
+            <TextSnippetIcon sx={{ margin: "10px" }} />
+            로그아웃
+          </Typography>
+        </Box>
       </Drawer>
     </Box>
   );

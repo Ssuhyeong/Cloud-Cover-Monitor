@@ -33,9 +33,9 @@ const theme = createTheme({
   },
 });
 const App = () => {
-  const token = useSelector((state) => state.Auth.token);
-  console.log(token);
-
+  // const data = useSelector((state) => state.Auth.data);
+  // console.log(data);
+  
   return (
     <ThemeProvider theme={theme}>
       <Router>
