@@ -21,3 +21,5 @@
  - 최소 1주일에 한번은 Zoom 혹은 오프라인 미팅
  - AWS 공부 외에 웹 프로그래밍 공부 필요
  - 논문 SCIE 저널 게재를 목표로 진행
+
+# 1차발표 : [IT융복합종합설계_손수형_1차발표.pdf](https://github.com/Ssuhyeong/Cloud-Cover-Monitor/files/9826486/IT._._1.pdf)
