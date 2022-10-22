@@ -139,15 +139,22 @@ def listToString(str_list):
     return result.strip()
 
 class SSHManager:
-
     def __init__(self):
         self.ssh_client = None
 
-    def create_ssh_client(self, hostname, username, key_filename):
+    def create_ssh_client(self, hostname, port , username, key_filename):
         if self.ssh_client is None:
             self.ssh_client = paramiko.SSHClient()
             self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            self.ssh_client.connect(hostname, username=username, key_filename=key_filename)
+            self.ssh_client.connect(hostname, port=port, username=username, key_filename=key_filename)
+        else:
+            print("SSH client session exist")
+
+    def create_ssh_client_pw(self, hostname, port , username, password):
+        if self.ssh_client is None:
+            self.ssh_client = paramiko.SSHClient()
+            self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            self.ssh_client.connect(hostname, port=port, username=username, password=password)
         else:
             print("SSH client session exist")
 
@@ -180,7 +187,7 @@ def aws_execute_wrk(url):
     cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
 
     ssh_manager = SSHManager()
-    ssh_manager.create_ssh_client("15.165.203.129", "ubuntu", "./Cloud Cover Monitor.pem")  # 세션생성
+    ssh_manager.create_ssh_client("15.165.203.129", "22" ,"ubuntu", "./Cloud Cover Monitor.pem")  # 세션생성
     output = ssh_manager.send_command(cmd)
     ssh_manager.close_ssh_client()  # 세션종료
 
@@ -190,7 +197,7 @@ def azure_execute_wrk(url):
     cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
 
     ssh_manager = SSHManager()
-    ssh_manager.create_ssh_client("4.230.130.68", "tngud124", "azure-cloud-cover-monitor.pem")  # 세션생성
+    ssh_manager.create_ssh_client("4.230.130.68", "22", "tngud124", "azure-cloud-cover-monitor.pem")  # 세션생성
     output = ssh_manager.send_command(cmd)
     ssh_manager.close_ssh_client()  # 세션종료
 
@@ -200,7 +207,17 @@ def gcp_execute_wrk(url):
     cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
 
     ssh_manager = SSHManager()
-    ssh_manager.create_ssh_client("34.64.151.101", "tngud124", "cloud-gcp-key")  # 세션생성
+    ssh_manager.create_ssh_client("34.64.151.101", "22", "tngud124", "cloud-gcp-key")  # 세션생성
+    output = ssh_manager.send_command(cmd)
+    ssh_manager.close_ssh_client()  # 세션종료
+
+    return output
+
+def ncp_execute_wrk(url):
+    cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
+
+    ssh_manager = SSHManager()
+    ssh_manager.create_ssh_client_pw("27.96.129.100", "1204", "root", "G3U$%bN*ffTRu")  # 세션생성
     output = ssh_manager.send_command(cmd)
     ssh_manager.close_ssh_client()  # 세션종료
 
@@ -209,20 +226,30 @@ def gcp_execute_wrk(url):
 
 
 def main():
+    
+    # AWS wrk 부하테스트 결과 ( JSON )
     # aws_output = aws_execute_wrk(sys.argv[1])
     # aws_output_dict = parse_wrk_output(aws_output)
     # aws_output_json = json.dumps(aws_output_dict)
     # print(aws_output_json)
 
+    # GCP wrk 부하테스트 결과 ( JSON )
     # gcp_output = gcp_execute_wrk(sys.argv[1])
     # gcp_output_dict = parse_wrk_output(gcp_output)
     # gcp_output_json = json.dumps(gcp_output_dict)
     # print(gcp_output_json)
 
-    azure_output = azure_execute_wrk(sys.argv[1])
-    azure_output_dict = parse_wrk_output(azure_output)
-    azure_output_json = json.dumps(azure_output_dict)
-    print(azure_output_json)
+    # Azure wrk 부하테스트 결과 ( JSON )
+    # azure_output = azure_execute_wrk(sys.argv[1])
+    # azure_output_dict = parse_wrk_output(azure_output)
+    # azure_output_json = json.dumps(azure_output_dict)
+    # print(azure_output_json)
+
+    # NCloud wrk 부하테스트 결과 ( JSON )
+    ncp_output = ncp_execute_wrk(sys.argv[1])
+    ncp_output_dict = parse_wrk_output(ncp_output)
+    ncp_output_json = json.dumps(ncp_output_dict)
+    print(ncp_output_json)
 
 if __name__ == '__main__':
     main()
