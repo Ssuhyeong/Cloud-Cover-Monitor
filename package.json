@@ -49,6 +49,7 @@
     "lottie-web": "^5.9.6",
     "mini-css-extract-plugin": "^2.4.5",
     "mysql": "^2.18.1",
+    "node-schedule": "^2.1.0",
     "npm": "^8.19.2",
     "postcss": "^8.4.4",
     "postcss-flexbugs-fixes": "^5.0.2",

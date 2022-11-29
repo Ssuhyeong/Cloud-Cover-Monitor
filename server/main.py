@@ -4,9 +4,19 @@ import paramiko
 import json
 import sys
 from scp import SCPClient, SCPException
+import boto3
 
-# wrkcmd = '/home/ubuntu/wrk'
+instance = 'i-04fae26b7efeb20b8'
 
+AWS_ACCESS_KEY_ID = 'AKIA4K552KIF377IED7D'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_DEFAULT_REGION = 'ap-northeast-2'
+
+instance = 'i-04fae26b7efeb20b8'
+
+client = boto3.client('ec2', aws_access_key_id=AWS_ACCESS_KEY_ID,
+                      aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                      region_name=AWS_DEFAULT_REGION)
 
 def wrk_data(wrk_output):
     return str(wrk_output.get('lat_avg')) + ',' + str(wrk_output.get('lat_stdev')) + ',' + str(
@@ -183,11 +193,52 @@ class SSHManager:
         output = listToString(output)
         return output
 
-def aws_execute_wrk(url):
+# def aws_execute_wrk(url):
+#     cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
+
+#     client.stop_instances(InstanceIds=[instance])
+#     waiter = client.get_waiter('instance_stopped')
+#     waiter.wait(InstanceIds=[instance])
+
+#     client.modify_instance_attribute(InstanceId=instance, Attribute='instanceType', Value='t2.nano')
+#     client.start_instances(InstanceIds=[instance])
+
+#     ssh_manager = SSHManager()
+#     ssh_manager.create_ssh_client("43.201.126.192", "22" ,"ubuntu", "./Cloud Cover Monitor.pem")  # 세션생성
+#     output = ssh_manager.send_command(cmd)
+#     ssh_manager.close_ssh_client()  # 세션종료
+
+#     return output
+
+def aws_execute_wrk_nano(url):
     cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
 
+    client.stop_instances(InstanceIds=[instance])
+    waiter = client.get_waiter('instance_stopped')
+    waiter.wait(InstanceIds=[instance])
+
+    client.modify_instance_attribute(InstanceId=instance, Attribute='instanceType', Value='t2.nano')
+    client.start_instances(InstanceIds=[instance])
+
     ssh_manager = SSHManager()
-    ssh_manager.create_ssh_client("15.165.203.129", "22" ,"ubuntu", "./Cloud Cover Monitor.pem")  # 세션생성
+    ssh_manager.create_ssh_client("43.201.126.192", "22" ,"ubuntu", "./Cloud Cover Monitor.pem")  # 세션생성
+    output = ssh_manager.send_command(cmd)
+    ssh_manager.close_ssh_client()  # 세션종료
+
+    return output
+
+def aws_execute_wrk_micro(url):
+    cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
+
+    client.stop_instances(InstanceIds=[instance])
+    waiter = client.get_waiter('instance_stopped')
+    waiter.wait(InstanceIds=[instance])
+
+    client.modify_instance_attribute(InstanceId=instance, Attribute='instanceType', Value='t2.micro')
+    client.start_instances(InstanceIds=[instance])
+
+    ssh_manager = SSHManager()
+    ssh_manager.create_ssh_client("43.201.126.192", "22", "ubuntu", "./Cloud Cover Monitor.pem")  # 세션생성
     output = ssh_manager.send_command(cmd)
     ssh_manager.close_ssh_client()  # 세션종료
 
@@ -203,7 +254,7 @@ def azure_execute_wrk(url):
 
     return output
 
-def gcp_execute_wrk(url):
+def gcp_execute_wrk(url) :
     cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
 
     ssh_manager = SSHManager()
@@ -228,10 +279,15 @@ def ncp_execute_wrk(url):
 def main():
     
     # AWS wrk 부하테스트 결과 ( JSON )
-    # aws_output = aws_execute_wrk(sys.argv[1])
-    # aws_output_dict = parse_wrk_output(aws_output)
-    # aws_output_json = json.dumps(aws_output_dict)
-    # print(aws_output_json)
+    aws_output = aws_execute_wrk_nano(sys.argv[1])
+    aws_output_dict = parse_wrk_output(aws_output)
+    aws_output_json = json.dumps(aws_output_dict)
+    print(aws_output_json)
+    
+    aws_output = aws_execute_wrk_micro(sys.argv[1])
+    aws_output_dict = parse_wrk_output(aws_output)
+    aws_output_json = json.dumps(aws_output_dict)
+    print(aws_output_json)
 
     # GCP wrk 부하테스트 결과 ( JSON )
     # gcp_output = gcp_execute_wrk(sys.argv[1])
@@ -246,10 +302,10 @@ def main():
     # print(azure_output_json)
 
     # NCloud wrk 부하테스트 결과 ( JSON )
-    ncp_output = ncp_execute_wrk(sys.argv[1])
-    ncp_output_dict = parse_wrk_output(ncp_output)
-    ncp_output_json = json.dumps(ncp_output_dict)
-    print(ncp_output_json)
+    # ncp_output = ncp_execute_wrk(sys.argv[1])
+    # ncp_output_dict = parse_wrk_output(ncp_output)
+    # ncp_output_json = json.dumps(ncp_output_dict)
+    # print(ncp_output_json)
 
 if __name__ == '__main__':
     main()
