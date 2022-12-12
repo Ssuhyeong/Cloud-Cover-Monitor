@@ -25,17 +25,9 @@ const theme = createTheme({
       contrastText: "#000000",
     },
 
-    // 로그아웃 버튼
-    logout: {
-      main: "#000000",
-      contrastText: "#000000",
-    },
   },
 });
-const App = () => {
-  // const data = useSelector((state) => state.Auth.data);
-  // console.log(data);
-  
+const App = () => {  
   return (
     <ThemeProvider theme={theme}>
       <Router>

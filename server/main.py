@@ -12,8 +12,6 @@ AWS_ACCESS_KEY_ID = 'AKIA4K552KIF377IED7D'
 AWS_SECRET_ACCESS_KEY = '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'
 AWS_DEFAULT_REGION = 'ap-northeast-2'
 
-instance = 'i-04fae26b7efeb20b8'
-
 client = boto3.client('ec2', aws_access_key_id=AWS_ACCESS_KEY_ID,
                       aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
                       region_name=AWS_DEFAULT_REGION)
@@ -193,6 +191,30 @@ class SSHManager:
         output = listToString(output)
         return output
 
+def aws_ai_execute():
+    ssh_manager = SSHManager()
+    ssh_manager.create_ssh_client("15.165.105.217", "22" ,"ubuntu", "./cloud_cover_monitor.pem")  # 세션생성
+    output = ssh_manager.send_command('cat examples/mnist/Data.txt')
+    ssh_manager.close_ssh_client()  # 세션종료
+
+    return output
+
+def azure_ai_execute():
+    ssh_manager = SSHManager()
+    ssh_manager.create_ssh_client("4.230.130.68", "22", "tngud124", "azure-cloud-cover-monitor.pem")  # 세션생성
+    output = ssh_manager.send_command('cat examples/mnist/Data.txt')
+    ssh_manager.close_ssh_client()
+
+    return output
+
+def gcp_ai_execute():
+    ssh_manager = SSHManager()
+    ssh_manager.create_ssh_client("34.64.152.125", "22", "tngud124", "cloud-gcp-key")  # 세션생성
+    output = ssh_manager.send_command('cat examples/mnist/Data.txt')
+    ssh_manager.close_ssh_client()  # 세션종료
+
+    return output
+
 # def aws_execute_wrk(url):
 #     cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
 
@@ -230,15 +252,15 @@ def aws_execute_wrk_nano(url):
 def aws_execute_wrk_micro(url):
     cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
 
-    client.stop_instances(InstanceIds=[instance])
-    waiter = client.get_waiter('instance_stopped')
-    waiter.wait(InstanceIds=[instance])
+    # client.stop_instances(InstanceIds=[instance])
+    # waiter = client.get_waiter('instance_stopped')
+    # waiter.wait(InstanceIds=[instance])
 
-    client.modify_instance_attribute(InstanceId=instance, Attribute='instanceType', Value='t2.micro')
-    client.start_instances(InstanceIds=[instance])
+    # client.modify_instance_attribute(InstanceId=instance, Attribute='instanceType', Value='t2.micro')
+    # client.start_instances(InstanceIds=[instance])
 
     ssh_manager = SSHManager()
-    ssh_manager.create_ssh_client("43.201.126.192", "22", "ubuntu", "./Cloud Cover Monitor.pem")  # 세션생성
+    ssh_manager.create_ssh_client("15.165.105.217", "22", "ubuntu", "./cloud_cover_monitor.pem")  # 세션생성
     output = ssh_manager.send_command(cmd)
     ssh_manager.close_ssh_client()  # 세션종료
 
@@ -254,11 +276,11 @@ def azure_execute_wrk(url):
 
     return output
 
-def gcp_execute_wrk(url) :
+def gcp_execute_wrk(url):
     cmd = 'wrk -t 4 -c 1000 -d 5s ' + str(url)
 
     ssh_manager = SSHManager()
-    ssh_manager.create_ssh_client("34.64.151.101", "22", "tngud124", "cloud-gcp-key")  # 세션생성
+    ssh_manager.create_ssh_client("34.64.152.125", "22", "tngud124", "cloud-gcp-key")  # 세션생성
     output = ssh_manager.send_command(cmd)
     ssh_manager.close_ssh_client()  # 세션종료
 
@@ -277,35 +299,54 @@ def ncp_execute_wrk(url):
 
 
 def main():
-    
     # AWS wrk 부하테스트 결과 ( JSON )
-    aws_output = aws_execute_wrk_nano(sys.argv[1])
-    aws_output_dict = parse_wrk_output(aws_output)
-    aws_output_json = json.dumps(aws_output_dict)
-    print(aws_output_json)
+    # aws_output = aws_execute_wrk_nano(sys.argv[1])
+    # aws_output_dict = parse_wrk_output(aws_output)
+    # aws_output_json = json.dumps(aws_output_dict)
+    # print(aws_output_json)
     
-    aws_output = aws_execute_wrk_micro(sys.argv[1])
-    aws_output_dict = parse_wrk_output(aws_output)
-    aws_output_json = json.dumps(aws_output_dict)
-    print(aws_output_json)
+    # aws_output = aws_execute_wrk_micro(sys.argv[1])
+
+    if sys.argv[1] == 'aws' :
+        aws_output = aws_execute_wrk_micro('http://15.165.105.217:3001/')
+        aws_output_dict = parse_wrk_output(aws_output)
+        aws_output_json = json.dumps(aws_output_dict)
+        print(aws_output_json)
 
     # GCP wrk 부하테스트 결과 ( JSON )
-    # gcp_output = gcp_execute_wrk(sys.argv[1])
-    # gcp_output_dict = parse_wrk_output(gcp_output)
-    # gcp_output_json = json.dumps(gcp_output_dict)
-    # print(gcp_output_json)
+    if sys.argv[1] == 'gcp' : 
+        gcp_output = gcp_execute_wrk('http://15.165.105.217:3001/')
+        gcp_output_dict = parse_wrk_output(gcp_output)
+        gcp_output_json = json.dumps(gcp_output_dict)
+        print(gcp_output_json)
 
     # Azure wrk 부하테스트 결과 ( JSON )
-    # azure_output = azure_execute_wrk(sys.argv[1])
-    # azure_output_dict = parse_wrk_output(azure_output)
-    # azure_output_json = json.dumps(azure_output_dict)
-    # print(azure_output_json)
+    if sys.argv[1] == 'azure' :
+        azure_output = azure_execute_wrk('http://4.230.130.68:3001/')
+        azure_output_dict = parse_wrk_output(azure_output)
+        azure_output_json = json.dumps(azure_output_dict)
+        print(azure_output_json)
 
     # NCloud wrk 부하테스트 결과 ( JSON )
-    # ncp_output = ncp_execute_wrk(sys.argv[1])
-    # ncp_output_dict = parse_wrk_output(ncp_output)
-    # ncp_output_json = json.dumps(ncp_output_dict)
-    # print(ncp_output_json)
+    if sys.argv[1] == 'ncp' :
+        ncp_output = ncp_execute_wrk('http://15.165.105.217:3001/')
+        ncp_output_dict = parse_wrk_output(ncp_output)
+        ncp_output_json = json.dumps(ncp_output_dict)
+        print(ncp_output_json)
+
+    # 딥러닝 트레이닝 시간 결과
+    if sys.argv[1] == 'ai':
+        aws_ai_data = aws_ai_execute()
+        azure_ai_data = azure_ai_execute()
+        gcp_ai_data = gcp_ai_execute()
+
+        result = {
+            "aws_ai_data" : aws_ai_data,
+            "azure_ai_data" : azure_ai_data,
+            "gcp_ai_data" : gcp_ai_data
+        }
+
+        print(json.dumps(result))
 
 if __name__ == '__main__':
     main()

@@ -1,0 +1,18 @@
+.chart__container {
+  width: 80%;
+  height: 100%;
+  margin: 25px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+
+.Bchart__container {
+  width: 80%;
+  height: 100%;
+  margin: 50px 30px 0px 15px;
+}
+
+.Tchart__container {
+  width: 90%;
+  height: 95%;
+  margin: 70px 30px 0px 15px;
+}

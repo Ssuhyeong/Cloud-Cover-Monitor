@@ -10,7 +10,7 @@ const PrivateRoute = ({ children }) => {
   const token = useSelector((state) => state.Auth.token);
   // redirectUrl은 로그인이 성공후 돌아갈 화면이다.
   if (jwtUtils.isAuth(token)) {
-    return <Navigate to={"/menu/side1"} />;
+    return <Navigate to={"/menu/aws"} />;
   }
 
   return <>{children}</>;

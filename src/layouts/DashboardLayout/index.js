@@ -5,8 +5,8 @@ import NavBar from "./NavBar";
 
 let Root = styled.div({
   backgroundColor: "#F8F8FA",
+  overflowY: "hidden",
   height: "100%",
-  // overflow: "hidden",
   width: "100%",
 });
 let Wrapper = styled.div({

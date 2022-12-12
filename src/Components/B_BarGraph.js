@@ -11,15 +11,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-class BarGraph extends PureComponent {
+class B_BarGraph extends PureComponent {
   render() {
     return (
-      <div className="chart__container">
+      <div className="Bchart__container">
         <ResponsiveContainer width="100%" height="90%">
-          <BarChart data={this.props.data} margin={{ left: 40 }}>
+          <BarChart data={this.props.data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey={this.props.name} />
-            <YAxis domain={[1000000, 2000000]} />
+            <YAxis domain={[0, 5000]} />
             <Tooltip />
             <Legend />
             {Object.keys(this.props.data[0]).map((key, index) => {
@@ -41,4 +41,4 @@ class BarGraph extends PureComponent {
   }
 }
 
-export default BarGraph;
+export default B_BarGraph;

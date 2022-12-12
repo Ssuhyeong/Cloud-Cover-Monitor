@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
 
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -11,34 +11,36 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-class BarGraph extends PureComponent {
+import "./LineGraph.css";
+
+class TotalLineGraph extends PureComponent {
   render() {
     return (
-      <div className="chart__container">
+      <div className="Tchart__container">
         <ResponsiveContainer width="100%" height="90%">
-          <BarChart data={this.props.data} margin={{ left: 40 }}>
+          <LineChart data={this.props.data} margin={{ left: 40 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey={this.props.name} />
-            <YAxis domain={[1000000, 2000000]} />
+            <YAxis domain={this.props.domain} />
             <Tooltip />
             <Legend />
             {Object.keys(this.props.data[0]).map((key, index) => {
               if (key !== this.props.name)
                 return (
-                  <Bar
+                  <Line
                     type="monotone"
                     key={index}
                     dataKey={key}
-                    fill={this.props.fill[key]}
+                    stroke={this.props.stroke[key]}
                     strokeWidth={1}
                   />
                 );
             })}
-          </BarChart>
+          </LineChart>
         </ResponsiveContainer>
       </div>
     );
   }
 }
 
-export default BarGraph;
+export default TotalLineGraph;

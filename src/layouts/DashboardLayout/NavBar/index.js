@@ -10,10 +10,13 @@ import {
 } from "@mui/material";
 import Divider from "@mui/material/Divider";
 
-import AlignVerticalBottomIcon from "@mui/icons-material/AlignVerticalBottom";
-import AnalyticsIcon from "@mui/icons-material/Analytics";
-import TextSnippetIcon from "@mui/icons-material/TextSnippet";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { FaAws } from "react-icons/fa";
+import { SiMicrosoftazure } from "react-icons/si";
+import { SiNaver } from "react-icons/si";
+import { FaGoogle } from "react-icons/fa";
+import { SlLogout } from "react-icons/sl";
+import { FaCloud } from "react-icons/fa";
+import { BiBrain } from "react-icons/bi";
 
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -22,24 +25,34 @@ import { setToken } from "../../../redux/reducers/AuthReducer";
 
 const items = [
   {
-    title: "그래프",
-    href: "side1",
-    icon: <AlignVerticalBottomIcon />,
+    title: "AWS",
+    href: "aws",
+    icon: <FaAws />,
   },
   {
-    title: "사이드1",
-    href: "side2",
-    icon: <AnalyticsIcon />,
+    title: "Azure",
+    href: "azure",
+    icon: <SiMicrosoftazure />,
   },
   {
-    title: "사이드2",
-    href: "side3",
-    icon: <TextSnippetIcon />,
+    title: "GCP",
+    href: "gcp",
+    icon: <FaGoogle />,
   },
   {
-    title: "사이드2",
-    href: "side4",
-    icon: <ManageAccountsIcon />,
+    title: "Ncloud",
+    href: "ncp",
+    icon: <SiNaver />,
+  },
+  {
+    title: "Compare",
+    href: "cloud",
+    icon: <FaCloud />,
+  },
+  {
+    title: "AI",
+    href: "AI",
+    icon: <BiBrain />,
   },
 ];
 
@@ -53,10 +66,6 @@ const NavBar = (props) => {
   const handleListItemClick = (value) => {
     navigate(`/menu/${value}`);
   };
-
-  // const handleLogoClick = () => {
-  //   navigate("/menu/side1");
-  // };
 
   const handlelogout = async () => {
     alert("로그아웃 되었습니다.");
@@ -136,7 +145,7 @@ const NavBar = (props) => {
             );
           })}
         </List>
-        <Box sx={{ pl: 20, py: 22, pr: 18.88, mt: 300 }}>
+        <Box sx={{ pl: 120, py: 22, pr: 18.88, mt: 450 }}>
           <Typography
             sx={{
               display: "flex",
@@ -146,14 +155,13 @@ const NavBar = (props) => {
               alignItems: "center",
               "&:hover": {
                 borderRadius: "4px",
-                backgroundColor: "#FFE9E9",
+                color: "red",
               },
             }}
             onClick={handlelogout}
             style={{ cursor: "pointer" }}
           >
-            <TextSnippetIcon sx={{ margin: "10px" }} />
-            로그아웃
+            logout <SlLogout />
           </Typography>
         </Box>
       </Drawer>

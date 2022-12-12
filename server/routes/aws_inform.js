@@ -3,25 +3,27 @@ const router = express.Router();
 const { PythonShell } = require("python-shell");
 const db = require("../config/db");
 const schedule = require("node-schedule");
+const rule = new schedule.RecurrenceRule();
 
-var num = 0;
-
-router.post("/wrkData", (req, res) => {
-  let data = {};
+// schedule.scheduleJob({hour: [17], minute: [56, 57], dayOfWeek: [0, 1, 2, 3, 4, 5, 6]}, () => {
+schedule.scheduleJob("*/3 * * * *", () => {
+  var newDate = new Date();
+  
+  console.log("aws insert");
   let options = {
     scripPath: "/",
-    args: req.query.ip,
+    args: "aws",
   };
 
   PythonShell.run("main.py", options, (err, data) => {
     if (err) throw err;
     if (data) {
       data = JSON.parse(data[0]);
-      console.log(data);
-      db.getConnection(function (err) {
+      // console.log(data);
+      db.getConnection(function (err, conn) {
         if (err) throw err;
         var sql =
-          "INSERT INTO wrkdata(lat_avg, lat_stdev, lat_max, req_avg, req_stdev, req_max, tot_requests, tot_duration, data_read) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
+          "INSERT INTO awsdata(lat_avg, lat_stdev, lat_max, req_avg, req_stdev, req_max, tot_requests, tot_duration, data_read, time) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         var values = [
           data.lat_avg,
           data.lat_stdev,
@@ -32,19 +34,17 @@ router.post("/wrkData", (req, res) => {
           data.tot_requests,
           data.tot_duration,
           data.read,
+          newDate,
         ];
         db.query(sql, values, function (err, result) {
           if (err) throw err;
           console.log("insert success");
         });
+
+        conn.release();
       });
     }
   });
 });
-
-// schedule.scheduleJob({ second: 1 }, function () {
-//   console.log("10초에 한번씩 실행됩니다. : " + num);
-//   num++;
-// });
 
 module.exports = router;
